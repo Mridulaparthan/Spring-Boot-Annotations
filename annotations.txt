@@ -1,7 +1,8 @@
 Spring Boot annotations
 
 1. @Bean
-  
+      @Bean annotation tells that a method produces a bean to be managed by the Spring container.
+      It is a method-level annotation. 
       @Bean 
       public Address getAddress() {
         return new Address("High Street", 1000);
