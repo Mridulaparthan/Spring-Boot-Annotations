@@ -123,24 +123,93 @@ Spring Boot annotations
               }
          }
 
-14. @Required
-
-         @Required annotation applies to bean property setter methods and 
-         it indicates that the affected bean property must be populated in XML configuration file at configuration time.
-         Otherwise, the container throws a BeanInitializationException exception.
-
-15. @Qualifier
+14. @Qualifier
 
          There may be a situation when you create more than one bean of the same type and want to wire only one of them with a property. 
          In such cases, you can use the @Qualifier annotation along with @Autowired to remove the confusion by specifying which exact bean will be wired.
+	 
+	 Car.java
+	 @Component
+         @Qualifier("carBean")
+         public class Car implements Vehicle {
+	    //...
+	    //...
+         }
+	 
+         Bike.java
 
-16. @Primary
+         @Component
+         @Qualifier("bikeBean")
+         public class Bike implements Vehicle{
+	    //...
+	    //...
+	 }
+	 
+	 VehicleService.java
+	 
+	 @Component
+         public class VehicleService {
+        
+	 @Autowired
+	 @Qualifier("carBean")
+         private Vehicle vehicle;
+	   //...
+	   //...
+	 }
+
+15. @Primary
 
          @Primary annotation enables a bean that gets preference when more than one bean is qualified to autowire a single valued dependency.
+	 
+	 Animal.java:
+         package com.animal;
+         public interface Animal {
+           void displayName();
+         }
+	 
+         Lion.java:  
+	 package com. animal;
+	 import org.springframework.context.annotation.Primary;
+	 import org.springframework.stereotype.Component;
+	 
+         @Component
+	 @Primary
+	 public class Lion implements Animal {
+	  @Override
+	  public void displayName() {
+	      System.out.println("--- Lion ---");
+	  }
+         }
+	 
+	 Tiger.java:
+	 package com. animal;
+	 import org.springframework.stereotype.Component;
+	 
+	 @Component
+	 public class Tiger implements Animal {
+	    @Override
+	    public void displayName() {
+	        System.out.println("-- Tiger ---");
+	     }
+	 }
 
-17. @Lazy
+16. @Lazy
 
          @Lazy annotation indicates whether a bean is to be lazily initialized. It can be used on @Component and @Bean definitions.
          A @Lazy bean is not initialized until referenced by another bean or explicitly retrieved from BeanFactory.
          Beans that are not annotated with @Lazy are initialized eagerly.
+	 
+	 @Lazy
+         @Configuration
+         @ComponentScan(basePackages = "com.lazy")
+         public class AppConfig {
+          @Bean
+          public Region getRegion(){
+              return new Region();
+	  }
+          @Bean
+	  public Country getCountry(){
+             return new Country();
+          }
+        }
 
